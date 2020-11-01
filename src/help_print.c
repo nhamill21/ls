@@ -85,27 +85,30 @@ static void print_flag(unsigned f)
 static void print_heap(t_heap *heap)
 {
 	int i;
+	t_item	*item = NULL;
 
-	if (heap)
+	if (heap) item = heap->item;
+	if (item)
 	{
-		if (heap->arr)
+		printf("%d %d %d\n", heap->first, heap->last, heap->size);
+		if (item->arg)
 		{
 			i = 0;
 			while (i < heap->last)
 			{
-				if (heap->arr + i)
-					printf("%s\n", *(heap->arr + i));
+				if ((item + i)->arg)
+					printf("%s\n", (item + i)->arg);
 				i++;
 			}
 		}
 		printf("\n");
-		if (heap->out)
+		if (item->out)
 		{
 			i = 0;
 			while (i < heap->last)
 			{
-				if (heap->out + i)
-					printf("%s\n", *(heap->out + i));
+				if ((item + i)->out)
+					printf("%s\n", (item + i)->out);
 				i++;
 			}
 		}

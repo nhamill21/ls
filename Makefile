@@ -13,7 +13,11 @@ SRC = help_print.c \
 		init.c \
 		exit.c \
 		heap_1.c heap_2.c \
-		list.c stack.c
+		list.c stack.c \
+		work.c \
+		free.c \
+		sort.c \
+		print.c
 
 SRCS = $(addprefix $(DIR)/,$(SRC))
 OBJS = $(addprefix $(DIR)/,$(SRC:.c=.o))

@@ -66,6 +66,7 @@ enum	e_position_flag_bits {
 # define SEP_STD "\n"
 # define SEP_M ","
 # define SEP_BLANK " "
+# define SEP_PATH '/'
 
 # define START_HEAP_SIZE 1
 # define COEF_HEAP_INC 2

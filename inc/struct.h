@@ -13,9 +13,19 @@
 #ifndef LS_STRUCT_H
 # define LS_STRUCT_H
 
+#include "ft_ls.h"
+#include <dirent.h>
+
+typedef struct		s_item {
+	char			*arg;
+	char			*out;
+	DIR				*dir;
+	struct stat		*stat;
+	struct dirent	*dirent;
+}					t_item;
+
 typedef struct		s_heap {
-	char			**arr;
-	char			**out;
+	t_item			*item;
 	int				first;
 	int				last;
 	int				size;
@@ -35,8 +45,13 @@ typedef struct		s_ls {
 	int				count;
 	int				exit;
 	unsigned		flags;
-	int				(*func)(const char *s1, const char *s2);
+	int				(*func)(const char *s1, const char *s2, unsigned flags);
 	t_stack			*stack;
 }					t_ls;
+
+typedef struct		s_pair {
+	int 			left;
+	int 			right;
+}					t_pair;
 
 #endif

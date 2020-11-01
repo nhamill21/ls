@@ -32,15 +32,19 @@ static t_ls	*get_fresh_ls(void)
 
 static void type_of_ls(t_ls *ls)
 {
-	dir_as_file(get_stack(ls->stack), ls);
-	if (get_stack(ls->stack) && get_stack(ls->stack->next))
-		printf(SEP_STD);
+	t_heap		*dirs;
+	t_heap		*files;
+
+	files = get_stack(ls->stack);
+	dirs = get_stack(ls->stack->next);
+	if (files)
+		work_with_files(files, ls);
+	else if (dirs && dirs->last == 1)
+		work_with_one_dir(dirs, ls);
 	pop_stack(&ls->stack);
-	if (!(ls->flags & LWR_D))
-	{
-		first_level_dirs(ls);
+	dirs = get_stack(ls->stack);
+	if (dirs)
 		(ls->flags & UPR_R ? recurs(ls) : non_recurs(ls));
-	}
 }
 
 int		main(int ac, char **av)

@@ -72,12 +72,18 @@ static int	add_files_dirs(char *name, t_heap **dirs, t_heap **files, t_ls *ls)
 	{
 		closedir(dr);
 		if (add_heap_elem((ls->flags & LWR_D ? files : dirs),
-					strdup(name), ls->func))
+					strdup(name), ls->flags, ls->func))
 			return (1);
+	}
+	else if ((errno == ENOTDIR && *(name + strlen(name) - (strlen(name) ? 1 :
+	0)) == SEP_PATH) || errno == ENOENT)
+	{
+		perror(name);
+		ls->exit = MINOR_PROBLEMS;
 	}
 	else if (errno == ENOTDIR)
 	{
-		if (add_heap_elem(files, strdup(name), ls->func))
+		if (add_heap_elem(files, strdup(name), ls->flags, ls->func))
 			return (1);
 	}
 	else
@@ -102,14 +108,14 @@ static void set_first_args(int ac, char **av, t_ls *ls)
 		if (*(av + i))
 			if (add_files_dirs(*(av + i), &dirs, &files, ls))
 			{
-//				free_heap(dirs);
-//				free_heap(files);
+				free_heap(dirs);
+				free_heap(files);
 				ft_exit(4, ls);
 			}
 		i++;
 	}
 	if (!dirs && !files)
-		if (add_heap_elem(&dirs, strdup("."), ls->func))
+		if (add_heap_elem(&dirs, strdup("."), ls->flags, ls->func))
 			ft_exit(4, ls);
 	push_stack(&ls->stack, new_stack(dirs));
 	push_stack(&ls->stack, new_stack(files));
@@ -121,11 +127,11 @@ t_ls		*init_ls(int ac, char **av, t_ls *ls)
 	if (ls->flags & FAIL)
 		ft_exit(1, ls);
 	if (ls->flags & LWR_F)
-		ls->func = strcmp;
+		ls->func = lexicographic_sort;
 	else if (ls->flags & LWR_T)
-		ls->func = NULL;
+		ls->func = time_sort;
 	else if (ls->flags & UPR_S)
-		ls->func = NULL;
+		ls->func = size_sort;
 	set_first_args(ac, av, ls);
 	return (ls);
 }
